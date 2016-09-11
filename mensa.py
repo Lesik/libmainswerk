@@ -12,12 +12,11 @@ TD = "td"
 vegasign = "🌱"
 vegesign = "🍇"
 
-defaulturl = "https://www.studentenwerkfrankfurt.de/essen-trinken/speiseplaene/cafeteria-bockenheim/"
-
 
 class Mensa():
 
-    def __init__(self, url=defaulturl):
+    def __init__(self, mensa="cafeteria-bockenheim"):
+        url = "https://www.studentenwerkfrankfurt.de/essen-trinken/speiseplaene/" + mensa
         self.soup = BeautifulSoup(get(url).text, 'lxml')
 
     def get_week(self):
@@ -62,7 +61,7 @@ class Mensa():
 
         try:
             return self.get_day(self.soup.find(STRONG, text=germandate).parent.parent)
-        except AttributeError e:
+        except AttributeError as e:
             raise NoFoodException("No food available for " + germandate)
 
     def get_food_info(self, food):
