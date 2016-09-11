@@ -25,14 +25,16 @@ class Mensa():
     def __init__(self, mensa):
         if mensa not in mensen:
             raise MensaNotFoundException()
-        url = "https://www.studentenwerkfrankfurt.de/essen-trinken/speiseplaene/" + mensa
+        url = "https://www.studentenwerkfrankfurt.de"
+                + "/essen-trinken/speiseplaene/" + mensa
         self.soup = BeautifulSoup(get(url).text, 'lxml')
 
     def get_week(self):
         """Returns a dictionary with keys = dates, values = lists of foods."""
         week = {}
         for day in self.soup.find_all(DIV, class_="panel panel-default"):
-            date = day.find(DIV, class_="panel-heading").find(STRONG).get_text()
+            date = day.find(DIV, class_="panel-heading")
+                    .find(STRONG).get_text()
             week[date] = self.get_day(day)
         return week
 
@@ -69,7 +71,8 @@ class Mensa():
         germandate = "Dienstag, 06. September"
 
         try:
-            return self.get_day(self.soup.find(STRONG, text=germandate).parent.parent)
+            return self.get_day(self.soup.find(STRONG, text=germandate)
+                    .parent.parent)
         except AttributeError as e:
             raise NoFoodException("No food available for " + germandate)
 
