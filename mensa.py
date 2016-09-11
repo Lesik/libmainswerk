@@ -12,10 +12,19 @@ TD = "td"
 vegasign = "🌱"
 vegesign = "🍇"
 
+mensen = ["cafeteria-bockenheim", "cafe-hochform", "mensa-casino",
+        "sommergarten", "mensa-anbau-casino", "cocktailbar-anbau-casino",
+        "cafeteria-casino", "dasein", "mensa-pi-x-gaumen", "cafeteria-darwins",
+        "cafeteria-level", "hochschule-fuer-musik-und-darstellende-kunst",
+        "cafeteria-offenbach", "mensa-esswerk", "mensa-accent", "mensa-point",
+        "mensa-ruesselsheim"]
+
 
 class Mensa():
 
-    def __init__(self, mensa="cafeteria-bockenheim"):
+    def __init__(self, mensa):
+        if mensa not in mensen:
+            raise MensaNotFoundException()
         url = "https://www.studentenwerkfrankfurt.de/essen-trinken/speiseplaene/" + mensa
         self.soup = BeautifulSoup(get(url).text, 'lxml')
 
@@ -82,10 +91,12 @@ class Mensa():
 class NoFoodException(Exception):
     """Exception that is raised when no food is available for a selected
     day."""
+    pass
 
-    def __init__(self, message):
-        self.message = message
+class MensaNotFoundException(Exception):
+    """Exception that is raised when no such mensa was found."""
+    pass
 
-mensa = Mensa()
+mensa = Mensa("cafeteria-bockenheim")
 #print(mensa.get_week())
 print(mensa.get_today())
