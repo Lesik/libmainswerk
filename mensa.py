@@ -25,15 +25,15 @@ class Mensa():
     def __init__(self, mensa):
         if mensa not in mensen:
             raise MensaNotFoundException()
-        url = "https://www.studentenwerkfrankfurt.de"
-                + "/essen-trinken/speiseplaene/" + mensa
+        url = "https://www.studentenwerkfrankfurt.de" + \
+                "/essen-trinken/speiseplaene/" + mensa
         self.soup = BeautifulSoup(get(url).text, 'lxml')
 
     def get_week(self):
         """Returns a dictionary with keys = dates, values = lists of foods."""
         week = {}
         for day in self.soup.find_all(DIV, class_="panel panel-default"):
-            date = day.find(DIV, class_="panel-heading")
+            date = day.find(DIV, class_="panel-heading") \
                     .find(STRONG).get_text()
             week[date] = self.get_day(day)
         return week
@@ -56,8 +56,7 @@ class Mensa():
         used as identifier on the Studentenwerk website."""
 
         if int(strftime("%w")) in [0, 6]:
-            #raise NoFoodException("No food available for this day.")
-            pass
+            raise NoFoodException("No food available during the weekend.")
 
         # I know this sucks, but alternative would be
         # stackoverflow.com/questions/985505/ which sucks even more
@@ -68,13 +67,14 @@ class Mensa():
         germandate = "{0}, {1}. {2}".format(weekdays[int(strftime("%w"))],
                 strftime("%d"), months[int(strftime("%m")) - 1])
         # for testing purposes, COMMENT THIS LATER:
+        #germandate = "Montag, 12. September"
         germandate = "Dienstag, 06. September"
 
-        try:
-            return self.get_day(self.soup.find(STRONG, text=germandate)
-                    .parent.parent)
-        except AttributeError as e:
+        day = self.soup.find(STRONG, text=germandate)
+        # if find() returns None that means date not found
+        if day is None:
             raise NoFoodException("No food available for " + germandate)
+        return self.get_day(day.parent.parent)
 
     def get_food_info(self, food):
         """Returns a dictionary with the keys
