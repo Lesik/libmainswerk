@@ -68,7 +68,7 @@ class Mensa():
                 strftime("%d"), months[int(strftime("%m")) - 1])
         # for testing purposes, COMMENT THIS LATER:
         #germandate = "Montag, 12. September"
-        germandate = "Dienstag, 06. September"
+        #germandate = "Dienstag, 06. September"
 
         day = self.soup.find(STRONG, text=germandate)
         # if find() returns None that means date not found
