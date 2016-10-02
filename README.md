@@ -1,5 +1,5 @@
 # libmainswerk
-Python librariy to fetch data from Frankfurt's student services "MainSWerk"
+Python library to fetch data from Frankfurt's student services "MainSWerk"
 
 ## Mensa
 This class fetches the food available at MainSWerk's cantines. Creating an
